@@ -68,6 +68,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changePos(){
+
+        // Piece
+        // Deplacement de la piece vers mario
+        pieceX -=12;
+        // calcul de la borne haute et basse n Y et droite et gauche en X
+        float pieceRight = pieceX + piece.getWidth();
+        float pieceDown = pieceY + piece.getHeight();
+        // Gestion de la collision par box mario et la piece etant des box il faut gérer
+        // la collision en X avec la borne Y inferieure et Y suppérieure
+        // La gestion avec un centre de gravité representant la piece
+        // dans les bornes X et Y est moins précise mais plus facile
+        if ((pieceDown < marioY+marioSize && marioY <pieceDown && pieceX < 0 && marioSize>pieceX)
+                ||(pieceY < marioY+marioSize && marioY <pieceY && pieceX < 0 && marioSize>pieceX)){
+            pieceX = -100.0f;
+        }
+
+        if (pieceX <0) {
+            pieceX = (float)Math.floor(frmaeWidth*1.1);
+            pieceY = (float)Math.floor(Math.random() * (frameHeight - piece.getHeight()));
+        }
+        piece.setX(pieceX);
+        piece.setY(pieceY);
+
+
         //mario
         marioY += marioSpeed;
         if (marioY<0) marioY=0;
