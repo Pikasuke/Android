@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     //Speed
     private int marioSpeed;
     //Score
-
+    private int score;
     //Timer
     private Timer timer;
     private Handler handler = new Handler();
@@ -69,19 +69,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void changePos(){
 
-        // Piece
+        /////////// Piece  ///////////
         // Deplacement de la piece vers mario
         pieceX -=12;
         // calcul de la borne haute et basse n Y et droite et gauche en X
         float pieceRight = pieceX + piece.getWidth();
         float pieceDown = pieceY + piece.getHeight();
-        // Gestion de la collision par box mario et la piece etant des box il faut gérer
-        // la collision en X avec la borne Y inferieure et Y suppérieure
-        // La gestion avec un centre de gravité representant la piece
-        // dans les bornes X et Y est moins précise mais plus facile
-        if ((pieceDown < marioY+marioSize && marioY <pieceDown && pieceX < 0 && marioSize>pieceX)
-                ||(pieceY < marioY+marioSize && marioY <pieceY && pieceX < 0 && marioSize>pieceX)){
+
+        if (ifCollision(pieceX, pieceY, pieceDown)){
             pieceX = -100.0f;
+            score+=10;
         }
 
         if (pieceX <0) {
@@ -91,8 +88,46 @@ public class MainActivity extends AppCompatActivity {
         piece.setX(pieceX);
         piece.setY(pieceY);
 
+        /////////// Champi ///////////
+        // Deplacement du champi vers mario
+        champiX -=20;
+        // calcul de la borne haute et basse n Y et droite et gauche en X
+        float champiRight = champiX + champi.getWidth();
+        float champiDown = champiY + champi.getHeight();
 
-        //mario
+       if (ifCollision(champiX, champiY, champiDown)){
+            champiX = -100.0f;
+            score+=30;
+        }
+
+        if (champiX <0) {
+            champiX = frmaeWidth*4;
+            champiY = (float)Math.floor(Math.random() * (frameHeight - champi.getHeight()));
+        }
+        champi.setX(champiX);
+        champi.setY(champiY);
+
+        /////////// Missile ///////////
+        // Deplacement du missile vers mario
+        missileX -=16;
+        // calcul de la borne haute et basse n Y et droite et gauche en X
+        float missileRight = missileX + missile.getWidth();
+        float missileDown = missileY + missile.getHeight();
+
+        if (ifCollision(missileX, missileY, missileDown)){
+            missileX = -100.0f;
+            score-=30;
+        }
+
+        if (missileX <0) {
+            missileX = (float)Math.floor(frmaeWidth*1.1);
+            missileY = (float)Math.floor(Math.random() * (frameHeight - missile.getHeight()));
+        }
+        missile.setX(missileX);
+        missile.setY(missileY);
+
+
+        ////////////  Mario  ///////////
         marioY += marioSpeed;
         if (marioY<0) marioY=0;
         if (marioY+marioSize >=frameHeight) marioY=frameHeight-marioSize;
@@ -100,6 +135,22 @@ public class MainActivity extends AppCompatActivity {
 
         marioSpeed+=2;
         if (action_flg)action_flg=false;
+
+        //Update Score
+        if (score<0) score = 0;
+        scoreLabel.setText("Score : "+score);
+    }
+
+    public boolean ifCollision (float x, float y, float down) {
+        // Gestion de la collision par box mario et la piece etant des box il faut gérer
+        // la collision en X avec la borne Y inferieure et Y suppérieure
+        // La gestion avec un centre de gravité representant la piece
+        // dans les bornes X et Y est moins précise mais plus facile
+        if ((down < marioY+marioSize && marioY <down && x < 0 && marioSize>x)
+                ||(y < marioY+marioSize && marioY <y && x < 0 && marioSize>x)){
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -136,6 +187,8 @@ public class MainActivity extends AppCompatActivity {
         //Initialize time
 
         //Initialize Score
+        score = 0;
+        scoreLabel.setText("Score : 0");
 
         //set Visibility
         startLayout.setVisibility(View.INVISIBLE);
