@@ -34,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private Timer timer;
     private Handler handler = new Handler();
     //Time Count
-
+    private final static long GAME_TIME = 15; //15 secondes
+    private long startTime;
+    private long remainedTime;
     //Sound
 
     //Status
@@ -68,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changePos(){
+        // TIME
+        remainedTime = GAME_TIME- (System.currentTimeMillis()-startTime)/1000;
+        timeLabel.setText("TIME : " + remainedTime);
+        //Game over
+        if (remainedTime<0){
+            gameOver();
+            return;
+        }
 
         /////////// Piece  ///////////
         // Deplacement de la piece vers mario
@@ -141,6 +151,29 @@ public class MainActivity extends AppCompatActivity {
         scoreLabel.setText("Score : "+score);
     }
 
+    public void gameOver() {
+        //Stop Timer
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+            start_flg = false;
+        }
+        titleLabel.setText("TIME OVER !");
+        titleLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+        //Set visibility
+        startLayout.setVisibility(View.VISIBLE);
+        startScoreLabel.setVisibility(View.VISIBLE);
+        scoreLabel.setVisibility(View.INVISIBLE);
+        timeLabel.setVisibility(View.INVISIBLE);
+        mario.setVisibility(View.INVISIBLE);
+        piece.setVisibility(View.INVISIBLE);
+        champi.setVisibility(View.INVISIBLE);
+        missile.setVisibility(View.INVISIBLE);
+
+        //update scoreLabeel in layout
+        startScoreLabel.setText("Score : "+score);
+    }
     public boolean ifCollision (float x, float y, float down) {
         // Gestion de la collision par box mario et la piece etant des box il faut gérer
         // la collision en X avec la borne Y inferieure et Y suppérieure
@@ -185,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
         missile.setX(missileX);
 
         //Initialize time
+        startTime = System.currentTimeMillis();
+        timeLabel.setText("TIME : " + GAME_TIME);
 
         //Initialize Score
         score = 0;
