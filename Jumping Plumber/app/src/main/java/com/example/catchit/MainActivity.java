@@ -161,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
         titleLabel.setText("TIME OVER !");
         titleLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
 
+
+        
         //Set visibility
         startLayout.setVisibility(View.VISIBLE);
         startScoreLabel.setVisibility(View.VISIBLE);
