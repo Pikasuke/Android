@@ -2,6 +2,8 @@ package com.example.catchit;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     //Speed
     private int marioSpeed;
     //Score
-    private int score;
+    private int score, highScore;
+    private SharedPreferences sharedPreferences;
     //Timer
     private Timer timer;
     private Handler handler = new Handler();
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private long startTime;
     private long remainedTime;
     //Sound
+    private SoundPlayer soundPlayer ;
 
     //Status
     private boolean start_flg = false;
@@ -46,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        soundPlayer = new SoundPlayer(this);
+
         gameFrame = findViewById(R.id.gameFrame);
         startLayout = findViewById(R.id.startLayout);
         mario = findViewById(R.id.mario);
@@ -67,17 +74,29 @@ public class MainActivity extends AppCompatActivity {
         scoreLabel.setVisibility(View.INVISIBLE);
         timeLabel.setVisibility(View.INVISIBLE);
         startScoreLabel.setVisibility(View.GONE);
+
+        //High Score
+        sharedPreferences = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
+        highScore = sharedPreferences.getInt("HIGHS CORE", 0);
+        highScoreLabel.setText("High Score : " + highScore);
     }
 
     public void changePos(){
         // TIME
         remainedTime = GAME_TIME- (System.currentTimeMillis()-startTime)/1000;
         timeLabel.setText("TIME : " + remainedTime);
+
         //Game over
         if (remainedTime<0){
             gameOver();
             return;
         }
+
+        /////////// Play Sound  ///////////
+        if (remainedTime < 7 && !soundPlayer.isPlaying()) {
+            soundPlayer.playHurryUp();
+        }
+
 
         /////////// Piece  ///////////
         // Deplacement de la piece vers mario
@@ -89,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         if (ifCollision(pieceX, pieceY, pieceDown)){
             pieceX = -100.0f;
             score+=10;
+            soundPlayer.playCoinSound();
         }
 
         if (pieceX <0) {
@@ -108,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
        if (ifCollision(champiX, champiY, champiDown)){
             champiX = -100.0f;
             score+=30;
-        }
+           soundPlayer.playChampSound();
+
+       }
 
         if (champiX <0) {
             champiX = frmaeWidth*4;
@@ -127,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
         if (ifCollision(missileX, missileY, missileDown)){
             missileX = -100.0f;
             score-=30;
+            soundPlayer.playHitMissileSound();
+
         }
 
         if (missileX <0) {
@@ -157,12 +181,14 @@ public class MainActivity extends AppCompatActivity {
             timer.cancel();
             timer = null;
             start_flg = false;
+            soundPlayer.pauseHurryUp();
         }
         titleLabel.setText("TIME OVER !");
         titleLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+        soundPlayer.playEndGameSound();
 
 
-        
+
         //Set visibility
         startLayout.setVisibility(View.VISIBLE);
         startScoreLabel.setVisibility(View.VISIBLE);
@@ -175,6 +201,15 @@ public class MainActivity extends AppCompatActivity {
 
         //update scoreLabeel in layout
         startScoreLabel.setText("Score : "+score);
+
+        //Update High Score
+        if (score > highScore) {
+            highScore = score;
+            highScoreLabel.setText("High Score : "+highScore);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("HIGH SCORE", highScore);
+            editor.apply();
+        }
     }
     public boolean ifCollision (float x, float y, float down) {
         // Gestion de la collision par box mario et la piece etant des box il faut gérer
@@ -194,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 action_flg=true;
                 marioSpeed = -20;
+                soundPlayer.playJumpSound();
             }
         }
         return super.onTouchEvent(event);
@@ -201,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startGame(View view){
         start_flg= true;
+        soundPlayer.playStartGameSound();
 
         //get frameheight and frame width
         if (frameHeight == 0){
