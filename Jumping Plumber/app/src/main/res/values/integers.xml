@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="speed_mario_jump">-20</integer>
+    <integer name="speed_mario_down">2</integer>
+    <integer name="speed_piece">12</integer>
+    <integer name="speed_champi">20</integer>
+    <integer name="speed_missile">16</integer>
+</resources>

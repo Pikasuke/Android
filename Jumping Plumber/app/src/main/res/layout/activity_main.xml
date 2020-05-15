@@ -4,108 +4,117 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
+
         <TextView
             android:id="@+id/scoreLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Score : 0"
-            android:textSize="18sp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/score"
+            android:textSize="18sp" />
+
         <TextView
             android:id="@+id/timeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time 30"
-            android:textSize="18sp"/>
+            android:text="@string/time"
+            android:textSize="18sp" />
     </LinearLayout>
 
-       <FrameLayout
-           android:id="@+id/gameFrame"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent">
-           <ImageView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:src="@drawable/b"/>
+    <FrameLayout
+        android:id="@+id/gameFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-           <ImageView
-               android:id="@+id/mario"
-               android:layout_width="40dp"
-               android:layout_height="40dp"
-               android:src="@drawable/mario10"/>
+        <ImageView
+            android:id="@+id/backgroundImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/b"
+            tools:ignore = "ContentDescrition"/>
 
-           <ImageView
-               android:id="@+id/missile"
-               android:layout_width="28dp"
-               android:layout_height="28dp"
-               android:src="@drawable/black"/>
+        <ImageView
+            android:id="@+id/mario"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/mario10"
+            tools:ignore = "ContentDescrition"/>
 
-           <ImageView
-               android:id="@+id/piece"
-               android:layout_width="20dp"
-               android:layout_height="20dp"
-               android:src="@drawable/piece"/>
+        <ImageView
+            android:id="@+id/missile"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/black"
+            tools:ignore = "ContentDescrition"/>
 
-           <ImageView
-               android:id="@+id/champi"
-               android:layout_width="16dp"
-               android:layout_height="16dp"
-               android:src="@drawable/champi"/>
+        <ImageView
+            android:id="@+id/piece"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/piece"
+            tools:ignore = "ContentDescrition"/>
 
-           <ImageView
-               android:id="@+id/ground"
-               android:layout_width="match_parent"
-               android:layout_height="55dp"
+        <ImageView
+            android:id="@+id/champi"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/champi"
+            tools:ignore = "ContentDescrition"/>
 
-               android:layout_gravity="bottom"/>
+        <ImageView
+            android:id="@+id/ground"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
 
-           <LinearLayout
-               android:id="@+id/startLayout"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:orientation="vertical"
-               android:gravity="center_horizontal">
+            android:layout_gravity="bottom" />
 
-           <TextView
-               android:id="@+id/titleLabel"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="Jumping Plumber"
-               android:textSize="26sp"
-               android:textStyle="bold"
-               android:layout_marginTop="10dp"
-               android:layout_marginBottom="40dp"/>
+        <LinearLayout
+            android:id="@+id/startLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-           <TextView
-               android:id="@+id/startScoreLabel"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="Score : 0"
-               android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/titleLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="40dp"
+                android:text="@string/app_name"
+                android:textSize="26sp"
+                android:textStyle="bold" />
 
-           <TextView
-               android:id="@+id/highScoreLabel"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="Hidh Score : 300"
-               android:textSize="20sp"
-               android:layout_marginTop="20dp"/>
+            <TextView
+                android:id="@+id/startScoreLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/score"
+                android:textSize="20sp" />
 
-           <Button
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="START"
-               android:layout_marginTop="30dp"
-               android:onClick="startGame"/>
+            <TextView
+                android:id="@+id/highScoreLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/high_score"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:onClick="startGame"
+                android:text="@string/btn_start" />
 
         </LinearLayout>
 
-       </FrameLayout>
+    </FrameLayout>
 </LinearLayout>

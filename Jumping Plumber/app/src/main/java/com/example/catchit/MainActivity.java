@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private float marioY, missileX, missileY, pieceX, pieceY, champiX, champiY;
     //Speed
     private int marioSpeed;
+    private int SPEED_MARIO_JUMP, SPEED_MARION_DOWN, SPEED_PIECE, SPEED_CHAMPI, SPEED_MISSILE;
     //Score
     private int score, highScore;
     private SharedPreferences sharedPreferences;
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     //Time Count
     private final static long GAME_TIME = 15; //15 secondes
     private long startTime;
-    private long remainedTime;
     //Sound
     private SoundPlayer soundPlayer ;
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         ground = findViewById(R.id.ground);
         scoreLabel = findViewById(R.id.scoreLabel);
         timeLabel = findViewById(R.id.timeLabel);
-        titleLabel = findViewById(R.id.timeLabel);
+        titleLabel = findViewById(R.id.titleLabel);
         startScoreLabel = findViewById(R.id.startScoreLabel);
         highScoreLabel = findViewById(R.id.highScoreLabel);
 
@@ -78,13 +78,19 @@ public class MainActivity extends AppCompatActivity {
         //High Score
         sharedPreferences = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
         highScore = sharedPreferences.getInt("HIGHS CORE", 0);
-        highScoreLabel.setText("High Score : " + highScore);
+        highScoreLabel.setText(getString(R.string.high_score, highScore));
+
+        SPEED_MARIO_JUMP = getResources().getInteger((R.integer.speed_mario_jump));
+        SPEED_MARION_DOWN = getResources().getInteger((R.integer.speed_mario_down));
+        SPEED_PIECE = getResources().getInteger((R.integer.speed_piece));
+        SPEED_CHAMPI = getResources().getInteger((R.integer.speed_champi));
+        SPEED_MISSILE = getResources().getInteger((R.integer.speed_missile));
     }
 
     public void changePos(){
         // TIME
-        remainedTime = GAME_TIME- (System.currentTimeMillis()-startTime)/1000;
-        timeLabel.setText("TIME : " + remainedTime);
+        long remainedTime = GAME_TIME- (System.currentTimeMillis()-startTime)/1000;
+        timeLabel.setText(getString(R.string.time, remainedTime));
 
         //Game over
         if (remainedTime<0){
@@ -100,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
         /////////// Piece  ///////////
         // Deplacement de la piece vers mario
-        pieceX -=12;
+        pieceX -=SPEED_PIECE;
         // calcul de la borne haute et basse n Y et droite et gauche en X
         float pieceRight = pieceX + piece.getWidth();
         float pieceDown = pieceY + piece.getHeight();
@@ -120,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         /////////// Champi ///////////
         // Deplacement du champi vers mario
-        champiX -=20;
+        champiX -=SPEED_CHAMPI;
         // calcul de la borne haute et basse n Y et droite et gauche en X
         float champiRight = champiX + champi.getWidth();
         float champiDown = champiY + champi.getHeight();
@@ -141,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
         /////////// Missile ///////////
         // Deplacement du missile vers mario
-        missileX -=16;
+        missileX -=SPEED_MISSILE;
         // calcul de la borne haute et basse n Y et droite et gauche en X
         float missileRight = missileX + missile.getWidth();
         float missileDown = missileY + missile.getHeight();
@@ -167,12 +173,12 @@ public class MainActivity extends AppCompatActivity {
         if (marioY+marioSize >=frameHeight) marioY=frameHeight-marioSize;
         mario.setY(marioY);
 
-        marioSpeed+=2;
+        marioSpeed+=SPEED_MARION_DOWN;
         if (action_flg)action_flg=false;
 
         //Update Score
         if (score<0) score = 0;
-        scoreLabel.setText("Score : "+score);
+        scoreLabel.setText(getString(R.string.score, score));
     }
 
     public void gameOver() {
@@ -183,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             start_flg = false;
             soundPlayer.pauseHurryUp();
         }
-        titleLabel.setText("TIME OVER !");
+        titleLabel.setText(getString(R.string.time_over));
         titleLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
         soundPlayer.playEndGameSound();
 
@@ -200,12 +206,14 @@ public class MainActivity extends AppCompatActivity {
         missile.setVisibility(View.INVISIBLE);
 
         //update scoreLabeel in layout
-        startScoreLabel.setText("Score : "+score);
+        startScoreLabel.setText(getString(R.string.score,score));
 
         //Update High Score
         if (score > highScore) {
             highScore = score;
-            highScoreLabel.setText("High Score : "+highScore);
+            //highScoreLabel.setText("High Score : "+highScore);
+            highScoreLabel.setText(getString(R.string.high_score, highScore));
+
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt("HIGH SCORE", highScore);
             editor.apply();
@@ -216,11 +224,14 @@ public class MainActivity extends AppCompatActivity {
         // la collision en X avec la borne Y inferieure et Y suppérieure
         // La gestion avec un centre de gravité representant la piece
         // dans les bornes X et Y est moins précise mais plus facile
-        if ((down < marioY+marioSize && marioY <down && x < 0 && marioSize>x)
-                ||(y < marioY+marioSize && marioY <y && x < 0 && marioSize>x)){
+        if ((down < marioY+marioSize && marioY <down && mario.getWidth()>x)
+                ||(y < marioY+marioSize && marioY <y && mario.getWidth()>x)
+                || (x<0)) {
             return true;
         }
         return false;
+
+
     }
 
     @Override
@@ -228,8 +239,10 @@ public class MainActivity extends AppCompatActivity {
         if(start_flg) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 action_flg=true;
-                marioSpeed = -20;
+                marioSpeed = SPEED_MARIO_JUMP;
                 soundPlayer.playJumpSound();
+                System.out.println(marioY + "= Mario Y");
+                System.out.println(marioSize + "= Mario Size");
             }
         }
         return super.onTouchEvent(event);
@@ -258,11 +271,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Initialize time
         startTime = System.currentTimeMillis();
-        timeLabel.setText("TIME : " + GAME_TIME);
+        timeLabel.setText(getString(R.string.time, GAME_TIME));
 
         //Initialize Score
         score = 0;
-        scoreLabel.setText("Score : 0");
+        scoreLabel.setText(getString(R.string.score));
 
         //set Visibility
         startLayout.setVisibility(View.INVISIBLE);
@@ -290,3 +303,4 @@ public class MainActivity extends AppCompatActivity {
         },0,20);
     }
 }
+

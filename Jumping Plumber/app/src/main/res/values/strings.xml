@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">CatchIt</string>
+    <string name="app_name">Jumping Plumber</string>
+    <string name="score">Score : %d</string>
+    <string name="time">Time : %d</string>
+    <string name="high_score">High Score : %d</string>
+    <string name="btn_start">START</string>
+    <string name="time_over">TIME OVER !</string>
 </resources>
