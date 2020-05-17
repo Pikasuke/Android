@@ -5,4 +5,5 @@
     <integer name="speed_piece">12</integer>
     <integer name="speed_champi">20</integer>
     <integer name="speed_missile">16</integer>
+    <integer name="game_Time">15</integer>
 </resources>

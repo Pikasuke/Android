@@ -14,18 +14,43 @@
 
         <TextView
             android:id="@+id/scoreLabel"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/score"
             android:textSize="18sp" />
+        <TextView
+            android:id="@+id/upLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/up"
+            android:textSize="18sp" />
+        <ImageView
+            android:id="@+id/up1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/champiup"
+            android:layout_marginHorizontal="10dp"/>
+        <ImageView
+            android:id="@+id/up2"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/champiup"
+            android:layout_marginHorizontal="10dp"/>
+        <ImageView
+            android:id="@+id/up3"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/champiup"
+            android:layout_marginHorizontal="10dp"/>
 
         <TextView
             android:id="@+id/timeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/time"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginLeft="20dp"/>
     </LinearLayout>
 
     <FrameLayout
@@ -45,6 +70,12 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/mario10"
+            tools:ignore = "ContentDescrition"/>
+        <ImageView
+            android:id="@+id/mario2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/mario20"
             tools:ignore = "ContentDescrition"/>
 
         <ImageView
@@ -98,21 +129,48 @@
                 android:layout_height="wrap_content"
                 android:text="@string/score"
                 android:textSize="20sp" />
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
             <TextView
-                android:id="@+id/highScoreLabel"
+                android:id="@+id/highScoreLabelTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_margin="20dp"
                 android:text="@string/high_score"
                 android:textSize="20sp" />
-
-            <Button
+            <TextView
+                android:id="@+id/highScoreLabelEndurance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:onClick="startGame"
-                android:text="@string/btn_start" />
+                android:layout_margin="20dp"
+                android:text="@string/high_score"
+                android:textSize="20sp" />
+        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnTimeAttack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_time"
+                android:layout_marginRight="20dp"/>
+
+            <Button
+                android:id="@+id/btnEndurance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_Endurance"
+                android:layout_marginLeft="20dp"/>
+            </LinearLayout>
 
         </LinearLayout>
 

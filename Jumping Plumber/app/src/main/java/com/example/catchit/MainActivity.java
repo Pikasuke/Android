@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,8 +23,12 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout gameFrame;
     private LinearLayout startLayout;
     //Elements
-    private ImageView mario, missile, piece, champi, ground;
-    private TextView scoreLabel, timeLabel, titleLabel, startScoreLabel, highScoreLabel;
+    private ImageView missile, piece, champi, ground;
+    private TextView scoreLabel,upLabel, timeLabel, titleLabel, startScoreLabel, highScoreLabelTime, highScoreLabelEndu;
+    private ImageView mario[] = new ImageView[2];
+    private Button timeAttackMode, enduranceMode;
+    private boolean isTimeAttack=false, isEndurance=false;
+    private ImageView up1, up2, up3;
     //Size
     private int frameHeight, frmaeWidth, marioSize;
     //Position
@@ -32,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private int marioSpeed;
     private int SPEED_MARIO_JUMP, SPEED_MARION_DOWN, SPEED_PIECE, SPEED_CHAMPI, SPEED_MISSILE;
     //Score
-    private int score, highScore;
+    private int score, highScoreEndu, highScoreTime;
+    private int lifeCounter;
     private SharedPreferences sharedPreferences;
     //Timer
     private Timer timer;
@@ -55,36 +61,68 @@ public class MainActivity extends AppCompatActivity {
 
         gameFrame = findViewById(R.id.gameFrame);
         startLayout = findViewById(R.id.startLayout);
-        mario = findViewById(R.id.mario);
+        mario[0] = findViewById(R.id.mario);
+        mario[1] = findViewById(R.id.mario2);
         missile = findViewById(R.id.missile);
         piece = findViewById(R.id.piece);
         champi = findViewById(R.id.champi);
         ground = findViewById(R.id.ground);
         scoreLabel = findViewById(R.id.scoreLabel);
+        upLabel = findViewById(R.id.upLabel);
+        up1 = findViewById(R.id.up1);
+        up2 = findViewById(R.id.up2);
+        up3 = findViewById(R.id.up3);
         timeLabel = findViewById(R.id.timeLabel);
         titleLabel = findViewById(R.id.titleLabel);
         startScoreLabel = findViewById(R.id.startScoreLabel);
-        highScoreLabel = findViewById(R.id.highScoreLabel);
+        highScoreLabelTime = findViewById(R.id.highScoreLabelTime);
+        highScoreLabelEndu = findViewById(R.id.highScoreLabelEndurance);
+        timeAttackMode = findViewById(R.id.btnTimeAttack);
+        enduranceMode = findViewById(R.id.btnEndurance);
 
         //Set Visibility
-        mario.setVisibility(View.INVISIBLE);
+
+        mario[0].setVisibility(View.INVISIBLE);
+        mario[1].setVisibility(View.INVISIBLE);
         missile.setVisibility(View.INVISIBLE);
         piece.setVisibility(View.INVISIBLE);
         champi.setVisibility(View.INVISIBLE);
         scoreLabel.setVisibility(View.INVISIBLE);
+        upLabel.setVisibility(View.INVISIBLE);
+        up1.setVisibility(View.INVISIBLE);
+        up2.setVisibility(View.INVISIBLE);
+        up3.setVisibility(View.INVISIBLE);
         timeLabel.setVisibility(View.INVISIBLE);
         startScoreLabel.setVisibility(View.GONE);
 
         //High Score
         sharedPreferences = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
-        highScore = sharedPreferences.getInt("HIGHS CORE", 0);
-        highScoreLabel.setText(getString(R.string.high_score, highScore));
+        highScoreEndu = sharedPreferences.getInt("ENDURANCE HIGH SCORE", 0);
+        highScoreTime = sharedPreferences.getInt("TIME HIGH SCORE", 0);
+        highScoreLabelEndu.setText(getString(R.string.high_score, highScoreEndu));
+        highScoreLabelTime.setText(getString(R.string.high_score, highScoreTime));
 
         SPEED_MARIO_JUMP = getResources().getInteger((R.integer.speed_mario_jump));
         SPEED_MARION_DOWN = getResources().getInteger((R.integer.speed_mario_down));
         SPEED_PIECE = getResources().getInteger((R.integer.speed_piece));
         SPEED_CHAMPI = getResources().getInteger((R.integer.speed_champi));
         SPEED_MISSILE = getResources().getInteger((R.integer.speed_missile));
+
+        //Select Mode
+        timeAttackMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isTimeAttack = true;
+                startGame();
+            }
+        });
+        enduranceMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isEndurance = true;
+                startGame();
+            }
+        });
     }
 
     public void changePos(){
@@ -92,17 +130,27 @@ public class MainActivity extends AppCompatActivity {
         long remainedTime = GAME_TIME- (System.currentTimeMillis()-startTime)/1000;
         timeLabel.setText(getString(R.string.time, remainedTime));
 
-        //Game over
-        if (remainedTime<0){
-            gameOver();
-            return;
+        //Game over Time Attack
+        if (isTimeAttack) {
+            if (remainedTime<0){
+                gameOver();
+                return;
+            }
+        }
+        //Game over Endurance Mode
+        if(isEndurance) {
+            if (lifeCounter<0){
+                gameOver();
+                return;
+            }
         }
 
         /////////// Play Sound  ///////////
-        if (remainedTime < 7 && !soundPlayer.isPlaying()) {
-            soundPlayer.playHurryUp();
-        }
-
+       if(isTimeAttack) {
+           if (remainedTime < 7 && !soundPlayer.isPlaying()) {
+               soundPlayer.playHurryUp();
+           }
+       }
 
         /////////// Piece  ///////////
         // Deplacement de la piece vers mario
@@ -135,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
             champiX = -100.0f;
             score+=30;
            soundPlayer.playChampSound();
-
        }
 
         if (champiX <0) {
@@ -154,9 +201,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (ifCollision(missileX, missileY, missileDown)){
             missileX = -100.0f;
-            score-=30;
             soundPlayer.playHitMissileSound();
-
+            if(isTimeAttack) score-=30;
+            if(isEndurance) lifeCounter-=1;
         }
 
         if (missileX <0) {
@@ -171,14 +218,27 @@ public class MainActivity extends AppCompatActivity {
         marioY += marioSpeed;
         if (marioY<0) marioY=0;
         if (marioY+marioSize >=frameHeight) marioY=frameHeight-marioSize;
-        mario.setY(marioY);
+        mario[0].setY(marioY);
+        mario[1].setY(marioY);
 
         marioSpeed+=SPEED_MARION_DOWN;
-        if (action_flg)action_flg=false;
+        if (action_flg){
+            mario[0].setVisibility(View.INVISIBLE);
+            mario[1].setVisibility(View.VISIBLE);
+            action_flg=false;
+            }else {
+            mario[0].setVisibility(View.VISIBLE);
+            mario[1].setVisibility(View.INVISIBLE);
+            }
 
         //Update Score
         if (score<0) score = 0;
         scoreLabel.setText(getString(R.string.score, score));
+
+        //Update life
+       if (lifeCounter==2) up3.setVisibility(View.INVISIBLE);
+       if (lifeCounter==1) up2.setVisibility(View.INVISIBLE);
+       if (lifeCounter==0) up1.setVisibility(View.INVISIBLE);
     }
 
     public void gameOver() {
@@ -193,14 +253,14 @@ public class MainActivity extends AppCompatActivity {
         titleLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
         soundPlayer.playEndGameSound();
 
-
-
         //Set visibility
         startLayout.setVisibility(View.VISIBLE);
         startScoreLabel.setVisibility(View.VISIBLE);
         scoreLabel.setVisibility(View.INVISIBLE);
         timeLabel.setVisibility(View.INVISIBLE);
-        mario.setVisibility(View.INVISIBLE);
+        upLabel.setVisibility(View.INVISIBLE);
+        mario[0].setVisibility(View.INVISIBLE);
+        mario[1].setVisibility(View.INVISIBLE);
         piece.setVisibility(View.INVISIBLE);
         champi.setVisibility(View.INVISIBLE);
         missile.setVisibility(View.INVISIBLE);
@@ -209,24 +269,38 @@ public class MainActivity extends AppCompatActivity {
         startScoreLabel.setText(getString(R.string.score,score));
 
         //Update High Score
-        if (score > highScore) {
-            highScore = score;
-            //highScoreLabel.setText("High Score : "+highScore);
-            highScoreLabel.setText(getString(R.string.high_score, highScore));
+       if (isTimeAttack) {
+           if (score > highScoreTime) {
+               highScoreTime = score;
+               //highScoreLabel.setText("High Score : "+highScore);
+               highScoreLabelTime.setText(getString(R.string.high_score, highScoreTime));
 
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("HIGH SCORE", highScore);
-            editor.apply();
-        }
+               SharedPreferences.Editor editor = sharedPreferences.edit();
+               editor.putInt("TIME HIGH SCORE", highScoreTime);
+               editor.apply();
+           }
+       }
+       if(isEndurance) {
+           if (score > highScoreEndu) {
+               highScoreEndu = score;
+               highScoreLabelEndu.setText(getString(R.string.high_score, highScoreEndu));
+
+               SharedPreferences.Editor editor = sharedPreferences.edit();
+               editor.putInt("ENDURANCE HIGH SCORE", highScoreEndu);
+               editor.apply();
+
+           }
+       }
+        isTimeAttack = false;
+        isEndurance = false;
     }
     public boolean ifCollision (float x, float y, float down) {
         // Gestion de la collision par box mario et la piece etant des box il faut gérer
         // la collision en X avec la borne Y inferieure et Y suppérieure
         // La gestion avec un centre de gravité representant la piece
         // dans les bornes X et Y est moins précise mais plus facile
-        if ((down < marioY+marioSize && marioY <down && mario.getWidth()>x)
-                ||(y < marioY+marioSize && marioY <y && mario.getWidth()>x)
-                || (x<0)) {
+        if ((down < marioY+marioSize && marioY <down && mario[0].getWidth()>x)
+                ||(y < marioY+marioSize && marioY <y && mario[0].getWidth()>x)) {
             return true;
         }
         return false;
@@ -248,7 +322,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
-    public void startGame(View view){
+
+
+    public void startGame(){
         start_flg= true;
         soundPlayer.playStartGameSound();
 
@@ -256,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
         if (frameHeight == 0){
             frameHeight = gameFrame.getHeight()-ground.getHeight();
             frmaeWidth = gameFrame.getWidth();
-            marioSize = mario.getHeight();
+            marioSize = mario[0].getHeight();
         }
 
         //Set Initial position
@@ -264,7 +340,8 @@ public class MainActivity extends AppCompatActivity {
         pieceX = -100.0f;
         champiX = -100.0f;
         missileX = -100.0f;
-        mario.setY(marioY);
+        mario[0].setY(marioY);
+        mario[1].setY(marioY);
         piece.setX(pieceX);
         champi.setX(champiX);
         missile.setX(missileX);
@@ -279,12 +356,27 @@ public class MainActivity extends AppCompatActivity {
 
         //set Visibility
         startLayout.setVisibility(View.INVISIBLE);
-        mario.setVisibility(View.VISIBLE);
+        mario[0].setVisibility(View.VISIBLE);
+        mario[1].setVisibility(View.INVISIBLE);
         missile.setVisibility(View.VISIBLE);
         piece.setVisibility(View.VISIBLE);
         champi.setVisibility(View.VISIBLE);
         scoreLabel.setVisibility(View.VISIBLE);
-        timeLabel.setVisibility(View.VISIBLE);
+        if (isTimeAttack) {
+            timeLabel.setVisibility(View.VISIBLE);
+            upLabel.setVisibility(View.INVISIBLE);
+            up1.setVisibility(View.INVISIBLE);
+            up2.setVisibility(View.INVISIBLE);
+            up3.setVisibility(View.INVISIBLE);
+        }
+        if (isEndurance) {
+            lifeCounter = 3;
+            upLabel.setVisibility(View.VISIBLE);
+            up1.setVisibility(View.VISIBLE);
+            up2.setVisibility(View.VISIBLE);
+            up3.setVisibility(View.VISIBLE);
+            timeLabel.setVisibility(View.INVISIBLE);
+        }
 
         //Start Timer
         timer = new Timer();
@@ -300,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             }
-        },0,20);
+        },0,40);
     }
 }
 
