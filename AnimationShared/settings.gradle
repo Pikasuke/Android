@@ -1,0 +1,2 @@
+rootProject.name='AnimationShared'
+include ':app'
