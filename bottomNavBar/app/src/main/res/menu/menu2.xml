@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/itam1"
+        android:title="Home"
+        android:icon="@mipmap/ic_launcher"></item>
+    <item
+        android:id="@+id/itam2"
+        android:title="Achievement"
+        android:icon="@mipmap/ic_launcher"></item>
+    <item
+        android:id="@+id/itam3"
+        android:title="Stteings"
+        android:icon="@mipmap/ic_launcher"></item>
+</menu>
