@@ -4,13 +4,13 @@
     <item
         android:id="@+id/itam1"
         android:title="Home"
-        android:icon="@mipmap/ic_launcher"></item>
+        android:icon="@drawable/ic_android_home"></item>
     <item
         android:id="@+id/itam2"
         android:title="Achievement"
-        android:icon="@mipmap/ic_launcher"></item>
+        android:icon="@drawable/ic_room_service_achev"></item>
     <item
         android:id="@+id/itam3"
         android:title="Stteings"
-        android:icon="@mipmap/ic_launcher"></item>
+        android:icon="@drawable/ic_settings"></item>
 </menu>

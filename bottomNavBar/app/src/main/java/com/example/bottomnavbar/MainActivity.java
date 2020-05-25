@@ -21,17 +21,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Bottom nav
         btnNav = findViewById(R.id.navigationView);
-        btnNav.setOnNavigationItemReselectedListener(navListener);
+        btnNav.setOnNavigationItemSelectedListener(navListener);
 
         // Setting Home Fragment as main fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout, new HomeFragment()).commit();
     }
 
+
     //Listener nav Bar
-    private BottomNavigationView.OnNavigationItemReselectedListener navListener = new
-            BottomNavigationView.OnNavigationItemReselectedListener() {
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new
+            BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
-                public void onNavigationItemReselected(@NonNull MenuItem item) {
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment seletedFragment = null;
 
                     switch (item.getItemId()) {
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Begin Transaction
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout,seletedFragment).commit();
-                    return ;
+                    return true;
                 }
             };
 

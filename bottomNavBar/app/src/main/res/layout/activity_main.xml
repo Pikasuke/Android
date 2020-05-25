@@ -22,9 +22,11 @@
         android:layout_height="70dp"
         android:id="@+id/navigationView"
         android:background="@color/colorPrimary"
+        app:itemBackground="?selectableItemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:itemIconTint="@color/rouge"
         app:menu="@menu/menu2"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
