@@ -81,7 +81,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"/>
+                        android:layout_marginRight="10dp"
+                        android:drawableStart="@drawable/custom_email_icon"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -95,7 +96,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"/>
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/custom_imput"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -109,7 +111,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"/>
+                        android:layout_marginRight="10dp"
+                        android:drawableStart="@drawable/custom_lock_icon"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
