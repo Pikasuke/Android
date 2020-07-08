@@ -555,14 +555,4 @@
         <item>Quill</item>
     </string-array>
 
-    <string-array name="heroList5">
-        <item>Ra's Al Ghul</item>
-        <item>Rachel Pirzad</item>
-        <item>Rambo</item>
-        <item>Raphael</item>
-        <item>Raven</item>
-        <item>Ray</item>
-        <item>Razor-Fist II</item>
-
-    </string-array>
 </resources>
