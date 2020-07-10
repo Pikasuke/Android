@@ -11,8 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Choose your Fighter"
-        android:textSize="18sp"
+        android:textSize="25sp"
         android:textStyle="bold"
+        android:textColor="@color/grisfonce"
         android:gravity="center"/>
 
     <LinearLayout
@@ -30,16 +31,22 @@
             android:layout_marginRight="20dp"/>
         <Button
             android:id="@+id/btnGo1"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="GO"
-            android:layout_marginRight="20dp"/>
+            android:textColor="@color/white"
+            android:layout_marginRight="20dp"
+            android:textStyle="bold"
+            android:background="@drawable/custombtnrond"/>
         <Button
             android:id="@+id/btnGo2"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="GO"
-            android:layout_marginLeft="20dp"/>
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textStyle="bold"
+            android:background="@drawable/custombtnrond"/>
         <AutoCompleteTextView
             android:id="@+id/edSearch2"
             android:layout_width="wrap_content"
@@ -209,22 +216,30 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp">
+        android:layout_marginBottom="70dp">
         <Button
             android:id="@+id/btnRestart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Restart"/>
+            android:text="Restart"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:background="@drawable/custombuttonroundcorner"/>
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
         <Button
             android:id="@+id/btnFight"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FiGHT"/>
+            android:text="FiGHT"
+            android:textStyle="bold"
+            android:textColor="@color/red"
+            android:background="@drawable/customovale"
+            android:layout_marginBottom="20dp"/>
     </RelativeLayout>
 
 </RelativeLayout>

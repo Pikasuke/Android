@@ -27,7 +27,7 @@ public class Fight extends AppCompatActivity {
     public AutoCompleteTextView edSearch1, edSearch2;
     public ImageView imv1, imv2, imvVs, imvWin;
     public String url, spurl, spurl2, urlImg1, urlImg2, heroCherche, heroCherche2, name1, name2, race1, race2;
-    public Integer speed1, hp1, attack1, speed2, hp2, attack2;
+    public Integer speed1, hp1, attack1, speed2, hp2, attack2, preums;
     public Integer[] tableauCombat;
     public Boolean premierQuiTape;
     public LinearLayout lName, lCard, lCard2;
@@ -37,8 +37,6 @@ public class Fight extends AppCompatActivity {
         setContentView(R.layout.activity_fight);
         btnGo1 = findViewById(R.id.btnGo1);
         btnGo2 = findViewById(R.id.btnGo2);
-        btnReset1 = findViewById(R.id.btnReset1);
-        btnReset2 = findViewById(R.id.btnReset2);
         btnFight = findViewById(R.id.btnFight);
         btnRestart = findViewById(R.id.btnRestart);
         btnRestart.setVisibility(View.INVISIBLE);
@@ -92,7 +90,6 @@ public class Fight extends AppCompatActivity {
                 hp1 = Integer.parseInt(tvHP.getText().toString());
                 hp2 = Integer.parseInt(tvHP2.getText().toString());
 
-
                   fight(speed1, hp1, attack1, speed2, hp2, attack2);
 
                 //Intent intent = new Intent(Fight.this, Result.class);
@@ -114,8 +111,6 @@ public class Fight extends AppCompatActivity {
                 invisible(btnRestart);
                 invisible(imvWin);
 
-
-
             }
         });
 
@@ -126,27 +121,46 @@ public class Fight extends AppCompatActivity {
         if  (speed1>speed2) {
              tableauCombat= new Integer[]{hp1, attack1, hp2, attack2};
              premierQuiTape = true;
+             preums = 1;
+            System.out.println("premierQuiTape : "+premierQuiTape);
+            System.out.println("preums : "+preums);
+            System.out.println("tab 0 : sup hp "+tableauCombat[0]);
+            System.out.println("tab 1 : sup attak "+tableauCombat[1]);
+            System.out.println("tab 2 : thanos hp "+tableauCombat[2]);
+            System.out.println("tab 3 : thanos attak "+tableauCombat[3]);
         } else {
              tableauCombat= new Integer[]{hp2, attack2, hp1, attack1};
              premierQuiTape = false;
+             preums = 0;
         }
         //moulinette de combat pour tuer un des deux
         while (tableauCombat[0] > 0 && tableauCombat[2] >0) {
             tableauCombat[2] = tableauCombat[2] - tableauCombat[1];
-            System.out.println("Attakfirst hp : "+tableauCombat[2]);
+            System.out.println("thanos hp : "+tableauCombat[2]);
+            System.out.println("toto tab 0 : "+tableauCombat[0]);
+            System.out.println("toto tab 1 : "+tableauCombat[1]);
+            System.out.println("toto tab 2 : "+tableauCombat[2]);
+            System.out.println("toto tab 3 : "+tableauCombat[3]);
             if (tableauCombat[2] <= 0) break;
             tableauCombat[0] = tableauCombat[0] - tableauCombat[3];
-            System.out.println("AttackDeuz hp : "+tableauCombat[0]);
+            System.out.println("Superman hp : "+tableauCombat[0]);
+            System.out.println("titi tab 0 : "+tableauCombat[0]);
+            System.out.println("titi tab 1 : "+tableauCombat[1]);
+            System.out.println("titi tab 2 : "+tableauCombat[2]);
+            System.out.println("titi tab 3 : "+tableauCombat[3]);
         }
+        System.out.println("preums "+preums);
+        System.out.println("1erqui tape "+premierQuiTape);
+        System.out.println("hp superman tab 0 : "+tableauCombat[0]);
 
         //Affiche le vainqueur , ou efface le perdant
         if (premierQuiTape && tableauCombat[0]>0){
             imv2.setVisibility(View.INVISIBLE);
-        } else if (premierQuiTape && tableauCombat[0]<0) {
+        } else if (premierQuiTape && tableauCombat[0]<=0) {
             imv1.setVisibility(View.INVISIBLE);
         } else if (!premierQuiTape && tableauCombat[0]>0) {
             imv1.setVisibility(View.INVISIBLE);
-        } else {
+        } else if(!premierQuiTape && tableauCombat[0]<=0){
             imv2.setVisibility(View.INVISIBLE);
         }
         invisible(imvVs);
