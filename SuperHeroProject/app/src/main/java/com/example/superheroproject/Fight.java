@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +27,7 @@ public class Fight extends AppCompatActivity {
     public TextView tvName, tvSpeed, tvHP, tvAttack, tvRace, tvName2, tvSpeed2, tvHP2, tvAttack2, tvRace2;
     public AutoCompleteTextView edSearch1, edSearch2;
     public ImageView imv1, imv2, imvVs, imvWin;
-    public String url, spurl, spurl2, urlImg1, urlImg2, heroCherche, heroCherche2, name1, name2, race1, race2;
+    public String url, spurl, spurl2, urlImg1, urlImg2, heroCherche, heroCherche2, name1, name2, race1, race2, speedinit, speedinit2;
     public Integer speed1, hp1, attack1, speed2, hp2, attack2, preums;
     public Integer[] tableauCombat;
     public Boolean premierQuiTape;
@@ -38,6 +39,7 @@ public class Fight extends AppCompatActivity {
         btnGo1 = findViewById(R.id.btnGo1);
         btnGo2 = findViewById(R.id.btnGo2);
         btnFight = findViewById(R.id.btnFight);
+        btnFight.setVisibility(View.INVISIBLE);
         btnRestart = findViewById(R.id.btnRestart);
         btnRestart.setVisibility(View.INVISIBLE);
         tvName = findViewById(R.id.tvName);
@@ -65,6 +67,7 @@ public class Fight extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadHero(edSearch1, name1,tvName, speed1, tvSpeed, hp1, tvHP, attack1, tvAttack,  race1, tvRace, imv1);
+                if (verifHeroCharge()) btnFight.setVisibility(View.VISIBLE);
             }
         });
 
@@ -72,25 +75,36 @@ public class Fight extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadHero(edSearch2, name2, tvName2, speed2, tvSpeed2, hp2, tvHP2, attack2, tvAttack2, race2, tvRace2, imv2);
+                if (verifHeroCharge()) btnFight.setVisibility(View.VISIBLE);
+
             }
         });
 
         btnFight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               lName.setVisibility(View.INVISIBLE);
-               invisible(lCard);
-               invisible(lCard2);
-               invisible(btnFight);
-               //affectation des valeurs pour le calcul du combat
-                speed1 = Integer.parseInt(tvSpeed.getText().toString());
-                speed2 = Integer.parseInt(tvSpeed2.getText().toString());
-                attack1 = Integer.parseInt(tvAttack.getText().toString());
-                attack2 = Integer.parseInt(tvAttack2.getText().toString());
-                hp1 = Integer.parseInt(tvHP.getText().toString());
-                hp2 = Integer.parseInt(tvHP2.getText().toString());
+            //Verif que les 2 heros st ddl
+                if (verifHeroCharge()) {
+                    lName.setVisibility(View.INVISIBLE);
+                    invisible(lCard);
+                    invisible(lCard2);
+                    invisible(btnFight);
+                    //affectation des valeurs pour le calcul du combat
+                    speed1 = Integer.parseInt(tvSpeed.getText().toString());
+                    speed2 = Integer.parseInt(tvSpeed2.getText().toString());
+                    attack1 = Integer.parseInt(tvAttack.getText().toString());
+                    attack2 = Integer.parseInt(tvAttack2.getText().toString());
+                    hp1 = Integer.parseInt(tvHP.getText().toString());
+                    hp2 = Integer.parseInt(tvHP2.getText().toString());
 
-                  fight(speed1, hp1, attack1, speed2, hp2, attack2);
+                    imvVs.animate().alpha(0).setDuration(500);
+                    imv1.animate().translationX(200).setDuration(1000);
+                    imv2.animate().translationX(-200).setDuration(1000);
+                    fight(speed1, hp1, attack1, speed2, hp2, attack2);
+                }
+                else {
+                    Toast.makeText(Fight.this, "Veuillez selectionner 2 Heroes", Toast.LENGTH_LONG).show();
+                }
 
                 //Intent intent = new Intent(Fight.this, Result.class);
                 //speed1 = intent.getStringExtra("speed1");
@@ -155,7 +169,9 @@ public class Fight extends AppCompatActivity {
 
         //Affiche le vainqueur , ou efface le perdant
         if (premierQuiTape && tableauCombat[0]>0){
-            imv2.setVisibility(View.INVISIBLE);
+          //  imv2.setVisibility(View.INVISIBLE);
+            imv2.animate().withEndAction(){
+            }
         } else if (premierQuiTape && tableauCombat[0]<=0) {
             imv1.setVisibility(View.INVISIBLE);
         } else if (!premierQuiTape && tableauCombat[0]>0) {
@@ -163,8 +179,8 @@ public class Fight extends AppCompatActivity {
         } else if(!premierQuiTape && tableauCombat[0]<=0){
             imv2.setVisibility(View.INVISIBLE);
         }
-        invisible(imvVs);
-        imvWin.setVisibility(View.VISIBLE);
+        //invisible(imvVs);
+      //  imvWin.setVisibility(View.VISIBLE);
         btnRestart.setVisibility(View.VISIBLE);
     }
 
@@ -229,5 +245,14 @@ public class Fight extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean verifHeroCharge() {
+        speedinit = tvSpeed.getText().toString();
+        speedinit2 = tvSpeed.getText().toString();
+        if (speedinit!="" && speedinit2!="") {
+            return true;
+        } else
+            return false;
     }
 }
