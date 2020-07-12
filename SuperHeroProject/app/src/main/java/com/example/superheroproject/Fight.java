@@ -4,10 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.solver.widgets.ConstraintWidget;
 import androidx.constraintlayout.solver.widgets.WidgetContainer;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,6 +74,11 @@ public class Fight extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadHero(edSearch1, name1,tvName, speed1, tvSpeed, hp1, tvHP, attack1, tvAttack,  race1, tvRace, imv1);
+                speedinit = tvSpeed.getText().toString();
+                speedinit2 = tvSpeed2.getText().toString();
+                System.out.println("speede init 1:"+ speedinit);
+                System.out.println("speede 2:"+ speedinit2);
+                System.out.println("oyoyoyo"+verifHeroCharge());
                 if (verifHeroCharge()) btnFight.setVisibility(View.VISIBLE);
             }
         });
@@ -75,6 +87,7 @@ public class Fight extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadHero(edSearch2, name2, tvName2, speed2, tvSpeed2, hp2, tvHP2, attack2, tvAttack2, race2, tvRace2, imv2);
+                System.out.println("tututut"+verifHeroCharge());
                 if (verifHeroCharge()) btnFight.setVisibility(View.VISIBLE);
 
             }
@@ -97,9 +110,9 @@ public class Fight extends AppCompatActivity {
                     hp1 = Integer.parseInt(tvHP.getText().toString());
                     hp2 = Integer.parseInt(tvHP2.getText().toString());
 
-                    imvVs.animate().alpha(0).setDuration(500);
-                    imv1.animate().translationX(200).setDuration(1000);
-                    imv2.animate().translationX(-200).setDuration(1000);
+                 //   imvVs.animate().alpha(0).setDuration(500);
+                   // imv1.animate().translationX(200).setDuration(1000);
+                    //imv2.animate().translationX(-200).setDuration(1000);
                     fight(speed1, hp1, attack1, speed2, hp2, attack2);
                 }
                 else {
@@ -122,6 +135,7 @@ public class Fight extends AppCompatActivity {
                 imv2.setVisibility(View.VISIBLE);
                 imv1.setVisibility(View.VISIBLE);
                 imvVs.setVisibility(View.VISIBLE);
+                imvVs.animate().alpha(100);
                 invisible(btnRestart);
                 invisible(imvWin);
 
@@ -170,14 +184,43 @@ public class Fight extends AppCompatActivity {
         //Affiche le vainqueur , ou efface le perdant
         if (premierQuiTape && tableauCombat[0]>0){
           //  imv2.setVisibility(View.INVISIBLE);
-            imv2.animate().withEndAction(){
-            }
+            System.out.println("Premier");
+            imv2.animate().rotationYBy(360f).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    imv2.animate().rotation(360f);
+                }
+            });
         } else if (premierQuiTape && tableauCombat[0]<=0) {
-            imv1.setVisibility(View.INVISIBLE);
+           // imv1.setVisibility(View.INVISIBLE);
+            System.out.println("Deuxieme");
+
+
         } else if (!premierQuiTape && tableauCombat[0]>0) {
-            imv1.setVisibility(View.INVISIBLE);
+          //  imv1.setVisibility(View.INVISIBLE);
+            //System.out.println("Troisieme");
+            AnimationSet as = new AnimationSet(true);
+            TranslateAnimation animation = new TranslateAnimation(
+                    Animation.ABSOLUTE, 0.0f, Animation.ABSOLUTE, 250.0f,
+                    Animation.ABSOLUTE, 0.0f, Animation.ABSOLUTE, 0.0f);
+            animation.setDuration(2000);
+            as.addAnimation(animation);
+
+            RotateAnimation rotateAnimation  = new RotateAnimation(
+                    Animation.ABSOLUTE 0,360,1,0,0,0f );
+            TranslateAnimation animation1 = new TranslateAnimation(
+                    Animation.ABSOLUTE, 0.0f, Animation.ABSOLUTE, 250.0f,
+                    Animation.ABSOLUTE, 150.0f, Animation.ABSOLUTE, 0.0f);
+            animation1.setDuration(2000);
+            animation1.setStartOffset(2000);
+            as.addAnimation(animation1);
+
+            imv1.startAnimation(as);
+
         } else if(!premierQuiTape && tableauCombat[0]<=0){
             imv2.setVisibility(View.INVISIBLE);
+            System.out.println("Quatrieme");
+
         }
         //invisible(imvVs);
       //  imvWin.setVisibility(View.VISIBLE);
@@ -249,7 +292,7 @@ public class Fight extends AppCompatActivity {
 
     public boolean verifHeroCharge() {
         speedinit = tvSpeed.getText().toString();
-        speedinit2 = tvSpeed.getText().toString();
+        speedinit2 = tvSpeed2.getText().toString();
         if (speedinit!="" && speedinit2!="") {
             return true;
         } else
