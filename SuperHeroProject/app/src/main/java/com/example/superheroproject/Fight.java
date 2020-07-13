@@ -136,6 +136,8 @@ public class Fight extends AppCompatActivity {
                 imv1.setVisibility(View.VISIBLE);
                 imvVs.setVisibility(View.VISIBLE);
                 imvVs.animate().alpha(100);
+                imv1.animate().alpha(100);
+                imv2.animate().alpha(100);
                 invisible(btnRestart);
                 invisible(imvWin);
 
@@ -199,23 +201,9 @@ public class Fight extends AppCompatActivity {
         } else if (!premierQuiTape && tableauCombat[0]>0) {
           //  imv1.setVisibility(View.INVISIBLE);
             //System.out.println("Troisieme");
-            AnimationSet as = new AnimationSet(true);
-            TranslateAnimation animation = new TranslateAnimation(
-                    Animation.ABSOLUTE, 0.0f, Animation.ABSOLUTE, 250.0f,
-                    Animation.ABSOLUTE, 0.0f, Animation.ABSOLUTE, 0.0f);
-            animation.setDuration(2000);
-            as.addAnimation(animation);
+            Animation eject = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotadeleft);
+            imv1.startAnimation(eject);
 
-            RotateAnimation rotateAnimation  = new RotateAnimation(
-                    Animation.ABSOLUTE 0,360,1,0,0,0f );
-            TranslateAnimation animation1 = new TranslateAnimation(
-                    Animation.ABSOLUTE, 0.0f, Animation.ABSOLUTE, 250.0f,
-                    Animation.ABSOLUTE, 150.0f, Animation.ABSOLUTE, 0.0f);
-            animation1.setDuration(2000);
-            animation1.setStartOffset(2000);
-            as.addAnimation(animation1);
-
-            imv1.startAnimation(as);
 
         } else if(!premierQuiTape && tableauCombat[0]<=0){
             imv2.setVisibility(View.INVISIBLE);
@@ -225,6 +213,11 @@ public class Fight extends AppCompatActivity {
         //invisible(imvVs);
       //  imvWin.setVisibility(View.VISIBLE);
         btnRestart.setVisibility(View.VISIBLE);
+    }
+    public void clockwise(View view){
+        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.myanim);
+        view.startAnimation(animation);
     }
 
     private void invisible(View w) {
