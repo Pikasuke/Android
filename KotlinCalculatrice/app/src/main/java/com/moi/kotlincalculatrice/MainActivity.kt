@@ -7,7 +7,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import net.objecthunter.exp4j.ExpressionBuilder
 import java.lang.Exception
-
+var dot = false
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,9 @@ class MainActivity : AppCompatActivity() {
         tv8.setOnClickListener { appendOnExpression("8", true) }
         tv9.setOnClickListener { appendOnExpression("9", true) }
         tv0.setOnClickListener { appendOnExpression("0", true) }
-        tvDot.setOnClickListener { appendOnExpression(".", true) }
+        tvDot.setOnClickListener {
+            if (!dot) {appendOnExpression(".", true)
+                        dot=true }}
         //Operande
         tvOpen.setOnClickListener { appendOnExpression("(", false) }
         tvClose.setOnClickListener { appendOnExpression(")", false) }
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         tvClear.setOnClickListener {
             tvExpresion.text = ""
             tvResult.text = ""
+            dot = false
         }
 
         tvBack.setOnClickListener {
@@ -52,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                 val expression = ExpressionBuilder(text).build()
                 val result = expression.evaluate()
                 val longResult = result.toLong()
+                dot = false
                 if (result == longResult.toDouble())
                     tvResult.text = longResult.toString()
                 else
